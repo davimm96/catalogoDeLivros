@@ -1,0 +1,15 @@
+html {
+    background-color: rgb(0, 0, 41);
+}
+
+#menuPrincipal {
+    display: flex;
+}
+
+#menuLogin, #menuCadastro {
+    margin: 5px;
+    padding: 5px;
+    background-color: blue;
+    color: yellow;
+    cursor: pointer;
+}
