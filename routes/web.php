@@ -19,11 +19,22 @@ Route::get('/', function () {
     return view('principal');
 });
 
+
+Route::middleware('guest')->group(function () {
 //Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+//Cadastro
+Route::get('/cadastro', [CadastroController::class, 'create'])->name('cadastro.create');
+Route::post('cadastro', [CadastroController::class, 'store'])->name('cadastro.store');
+
+Route::get('cadastro/cadastro', [CadastroController::class, 'store']);
+
+});
+
+Route::middleware('auth')->group(function () {
 //Dashboard (página após o login)
 Route::get('/dashboard', function(){
     if(!session('usuario')){
@@ -32,13 +43,7 @@ Route::get('/dashboard', function(){
 
     return view('dashboard');
 })->name('dashboard');
-
-
-//Cadastro
-Route::get('/cadastro', [CadastroController::class, 'create'])->name('cadastro.create');
-Route::post('cadastro', [CadastroController::class, 'store'])->name('cadastro.store');
-
-Route::get('cadastro/cadastro', [CadastroController::class, 'store']);
+});
 
 /*
 Route::get('/test-db', function(){

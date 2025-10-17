@@ -31,6 +31,8 @@ class LoginController extends Controller {
             return redirect()->route('dashboard');
         }
 
+
+
         //Caso falhe
         return back()->withErrors(['loginErro' => 'E-mail ou senha incorretos']);
     }

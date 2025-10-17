@@ -2,29 +2,28 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, string ...$guards): Response
+    public function handle(Request $request, Closure $next)
     {
-        $guards = empty($guards) ? [null] : $guards;
+        // Se o usuário estiver logado
+        if (Auth::check()) {
+            // Redireciona para o dashboard caso tente acessar login ou cadastro
+           echo "você já esta logado";
+            //return redirect()->route('dashboard');
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
         }
 
+        // Caso não esteja logado, deixa passar
+        echo "Você não está logado";
         return $next($request);
+
     }
 }
