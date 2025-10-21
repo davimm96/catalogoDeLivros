@@ -1,58 +1,24 @@
 <?php
-
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CadastroController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
+// Rota de cadastro (somente para quem não está logado)
+Route::middleware('guest.session')->group(function () {
+    Route::get('/cadastro', [CadastroController::class, 'showForm'])->name('cadastro.form');
+    Route::post('/cadastro', [CadastroController::class, 'cadastrar'])->name('cadastro.salvar');
+
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
+    Route::post('/login', [LoginController::class, 'login'])->name('login');
+});
+
+// Rota protegida (somente logado)
+Route::middleware('auth.session')->group(function () {
+    /*Route::get('/dashboard', function () {
+        return view('dashboard', ['usuario' => session('usuario')]);
+    })->name('dashboard');
 */
-
-Route::get('/', function () {
-    return view('principal');
+    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
-
-
-Route::middleware('guest')->group(function () {
-//Login
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login.form');
-Route::post('/login', [LoginController::class, 'login'])->name('login');
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-
-//Cadastro
-Route::get('/cadastro', [CadastroController::class, 'create'])->name('cadastro.create');
-Route::post('cadastro', [CadastroController::class, 'store'])->name('cadastro.store');
-
-Route::get('cadastro/cadastro', [CadastroController::class, 'store']);
-
-});
-
-Route::middleware('auth')->group(function () {
-//Dashboard (página após o login)
-Route::get('/dashboard', function(){
-    if(!session('usuario')){
-        return redirect()->route('login.form');
-    }
-
-    return view('dashboard');
-})->name('dashboard');
-});
-
-/*
-Route::get('/test-db', function(){
-    try {
-        DB::connection()->getPdo();
-        return "✅ Conectado ao banco: ". DB::connection()->getDatabaseName();
-    }catch(\Exception $e){
-        return "Erro: ". $e->getMessage();
-    }
-});
-
-*/

@@ -3,29 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{asset('css/loginStyle.css')}}">
     <title>Login</title>
+
 </head>
 <body>
-    <h1>Faça login ou <a href="{{ route('cadastro.create') }}">cadastre-sa</a></h1>
 
+<div class="container">
+    <h2>Login</h2>
 
-    @if($errors->has('loginErro'))
-        <p style="color:red;">{{$errors->first('loginErro')}}</p>
+    <!-- Mensagem de sucesso (ex: cadastro concluído) -->
+    @if(session('sucesso'))
+        <div class="sucesso">{{ session('sucesso') }}</div>
     @endif
 
-    <form action="{{route('login')}}" method="POST">
+    <!-- Erro de login -->
+    @if($errors->has('loginErro'))
+        <div class="erro">{{ $errors->first('loginErro') }}</div>
+    @endif
+
+    <form action="{{ route('login') }}" method="POST">
         @csrf
 
-        <label for="email">Email:</label></br>
-        <input type="email" id="email" name="email" required><br><br>
+        <input type="email" name="email" placeholder="E-mail" value="{{ old('email') }}" required>
+        @error('email')
+            <div class="erro">{{ $message }}</div>
+        @enderror
 
-        <label for="senha">Senha:</label><br>
-        <input type="password" id="senha" name="senha" required><br><br>
+        <input type="password" name="senha" placeholder="Senha" required>
+        @error('senha')
+            <div class="erro">{{ $message }}</div>
+        @enderror
 
         <button type="submit">Entrar</button>
     </form>
 
-    <br>
+    <a href="{{ route('cadastro.form') }}">Criar conta</a>
+</div>
 
 </body>
 </html>

@@ -3,27 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{asset('css/cadastroStyle.css')}}">
     <title>Cadastro</title>
 </head>
 <body>
-    <h1>Cdastre-se ou faça <a href="{{route('login.form')}}">login</a></h1>
 
-    @if (session('success'))
-        <p style="color: green">{{ session('success')}}</p>
+<div class="container">
+    <h2>Criar Conta</h2>
+
+    <!-- Mensagem de erro geral -->
+    @if($errors->any())
+        <div class="erro">
+            <ul style="padding-left: 15px;">
+                @foreach($errors->all() as $erro)
+                    <li>{{ $erro }}</li>
+                @endforeach
+            </ul>
+        </div>
     @endif
 
-    <form action="{{route('cadastro.store')}}" method="POST">
+    <form action="{{ route('cadastro.salvar') }}" method="POST">
         @csrf
-        <label for="nome">Nome:</label><br>
-        <input type="text" id="nome" name="nome" minlength="6" maxlength="200" required><br><br>
 
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" minlength="6" maxlength="200" required><br><br>
+        <input type="text" name="nome" placeholder="Nome completo" value="{{ old('nome') }}" required>
+        @error('nome')
+            <div class="erro">{{ $message }}</div>
+        @enderror
 
-        <label for="senha">Senha:</label><br>
-        <input type="password" id="senha" name="senha" minlength="6" maxlength="200" required><br><br>
+        <input type="email" name="email" placeholder="E-mail" value="{{ old('email') }}" required>
+        @error('email')
+            <div class="erro">{{ $message }}</div>
+        @enderror
 
-        <button type="submit">Enviar</button>
+        <input type="password" name="senha" placeholder="Senha" required>
+        @error('senha')
+            <div class="erro">{{ $message }}</div>
+        @enderror
+
+        <button type="submit">Cadastrar</button>
     </form>
+
+    <a href="{{ route('login.form') }}">Já tem uma conta? Fazer login</a>
+</div>
+
 </body>
 </html>
